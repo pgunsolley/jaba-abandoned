@@ -11,6 +11,7 @@
     "@babel/runtime": "^7.23.5",
     "@swc/helpers": "^0.5.17",
     "chokidar": "^4.0.3",
+    "dotenv": "^17.2.3",
     "meteor-node-stubs": "^1.2.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -20,6 +21,9 @@
     "@types/node": "^22.10.6",
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.4",
+    "@types/sinon": "^17.0.4",
+    "mock-fs": "^5.5.0",
+    "sinon": "^21.0.0",
     "typescript": "^5.4.5"
   },
   "meteor": {
