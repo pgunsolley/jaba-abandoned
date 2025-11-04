@@ -8,7 +8,7 @@ export type OnAddListener = (filePath: string, stats?: Stats) => void;
 export type OnErrorListener = (error: unknown) => void;
 
 export interface WatchDirProps {
-    path: string;
+    path: string | string[];
     onReadyListener?: OnReadyListener;
     onUnlinkListener: OnUnlinkListener;
     onAddListener: OnAddListener;
