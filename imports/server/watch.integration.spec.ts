@@ -1,3 +1,10 @@
+/*
+watchDir() tests are dependent on underlying filesystem and configured tmp dir,
+and heavily rely on timeouts to test accurately.
+Tests passed using Fedora 42 /tmp in memory:
+https://docs.fedoraproject.org/en-US/defensive-coding/tasks/Tasks-Temporary_Files/
+*/
+
 import { createFixture, FsFixture } from 'fs-fixture';
 import { SinonSpy, spy, assert } from 'sinon';
 import { FSWatcher } from 'chokidar';
@@ -5,8 +12,6 @@ import { FSWatcher } from 'chokidar';
 import { sleep } from '../utils/sleep';
 import { watchDir } from './watch';
 
-// Tests are dependent on underlying filesystem and configured tmp dir,
-// and heavily rely on timeouts to test accurately.
 describe('imports/server/watch.ts', function () {
     describe('watchDir()', function () {
         this.timeout(8000);
@@ -33,8 +38,8 @@ describe('imports/server/watch.ts', function () {
         it('should call onReadListener() once on initialization', async function () {
             await sleep(1000);
             assert.calledOnce(onReadyListener);
-            assert.neverCalledWith(onAddListener);
-            assert.neverCalledWith(onUnlinkListener);
+            assert.callCount(onAddListener, 0);
+            assert.callCount(onUnlinkListener, 0);
         });
 
         it('should call onReadyListener() once and onAddListener() once after writing 1 file', async function () {
@@ -42,7 +47,7 @@ describe('imports/server/watch.ts', function () {
             await sleep(1000);
             assert.calledOnce(onReadyListener);
             assert.calledOnce(onAddListener);
-            assert.neverCalledWith(onUnlinkListener);
+            assert.callCount(onUnlinkListener, 0);
         });
 
         it('should call onReadyListener() once and onAddListener() twice after writing 2 files', async function () {
@@ -51,7 +56,7 @@ describe('imports/server/watch.ts', function () {
             await sleep(1000);
             assert.calledOnce(onReadyListener);
             assert.calledTwice(onAddListener);
-            assert.neverCalledWith(onUnlinkListener);
+            assert.callCount(onUnlinkListener, 0);
         });
 
         it('should call onReadyLlistener() once, onAddListener() twice, onUnlinkListener() once after writing 2 files, and removing 1', async function () {
@@ -70,7 +75,7 @@ describe('imports/server/watch.ts', function () {
             await sleep(3000);
             assert.calledOnce(onReadyListener);
             assert.callCount(onAddListener, fileCount);
-            assert.neverCalledWith(onUnlinkListener);
+            assert.callCount(onUnlinkListener, 0);
         });
 
         it('should call onReadyListener() once, onAddListener() 10000 times, and onUnlinkListner() 10000 times', async function () {
@@ -84,6 +89,14 @@ describe('imports/server/watch.ts', function () {
             assert.calledOnce(onReadyListener);
             assert.callCount(onAddListener, fileCount);
             assert.callCount(onUnlinkListener, fileCount);
+        });
+
+        it('should call onReadyListener() once, and ignore added subdirectory', async function () {
+            await fixture.mkdir('foo');
+            await sleep(1000);
+            assert.calledOnce(onReadyListener);
+            assert.callCount(onAddListener, 0);
+            assert.callCount(onUnlinkListener, 0);
         });
     });
 });
