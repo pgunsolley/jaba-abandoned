@@ -7,7 +7,6 @@ https://docs.fedoraproject.org/en-US/defensive-coding/tasks/Tasks-Temporary_File
 
 import { createFixture, FsFixture } from 'fs-fixture';
 import { SinonSpy, spy, assert } from 'sinon';
-import { FSWatcher } from 'chokidar';
 
 import { sleep } from '../utils/sleep';
 import { watchDir } from './watch';
@@ -17,7 +16,6 @@ describe('imports/server/watch.ts', function () {
         this.timeout(8000);
 
         let fixture: FsFixture;
-        let watcher: FSWatcher;
         let onAddListener: SinonSpy;
         let onReadyListener: SinonSpy;
         let onUnlinkListener: SinonSpy;
@@ -28,7 +26,7 @@ describe('imports/server/watch.ts', function () {
             onReadyListener = spy();
             onUnlinkListener = spy();
             const path = fixture.path;
-            watcher = watchDir({ path, onAddListener, onReadyListener, onUnlinkListener });
+            watchDir({ path, onAddListener, onReadyListener, onUnlinkListener });
         });
 
         afterEach(async function () {
