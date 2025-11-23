@@ -2,7 +2,7 @@
   "name": "jaba",
   "private": true,
   "scripts": {
-    "start": "MEDIA_PATH=\"$(pwd)/dev/files\" meteor run",
+    "start": "MEDIA_PATH=\"$(pwd)/dev/files\" APP_FILES_PATH=\"$(pwd)/dev/files/.jaba\" meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
