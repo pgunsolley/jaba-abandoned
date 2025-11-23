@@ -2,7 +2,7 @@
   "name": "jaba",
   "private": true,
   "scripts": {
-    "start": "meteor run",
+    "start": "MEDIA_PATH=\"$(pwd)/dev/files\" meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
@@ -11,7 +11,6 @@
     "@babel/runtime": "^7.23.5",
     "@swc/helpers": "^0.5.17",
     "chokidar": "^4.0.3",
-    "dotenv": "^17.2.3",
     "env-var": "^7.5.0",
     "file-type": "^21.1.1",
     "meteor-node-stubs": "^1.2.12",
