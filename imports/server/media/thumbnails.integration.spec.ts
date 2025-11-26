@@ -1,9 +1,11 @@
 import { basename, join } from 'node:path';
 import { promisify } from 'node:util';
+import { createWriteStream } from 'node:fs';
 
 import { expect } from 'chai';
 import { createFixture, FsFixture } from 'fs-fixture';
 import imgGen from 'js-image-generator';
+import PDFDocument from 'pdfkit';
 import sharp from 'sharp';
 
 const generateImage = promisify(imgGen.generateImage);
@@ -29,7 +31,7 @@ describe('imports/server/media/thumbnails.ts', function () {
         await fixture.rm();
     });
     
-    describe('writeFromImagePath()', async function () {
+    describe('writeFromImagePath()', function () {
         it('should write thumbnail successfully', async function () {
             const image = await generateImage(1200, 1200, 80);
             const imageName = 'image.jpg';
@@ -41,6 +43,38 @@ describe('imports/server/media/thumbnails.ts', function () {
             const thumbnailMeta = await sharp(expectedThumbnailFullPath).metadata();
             expect(thumbnailMeta.width).to.equal(thumbnailsModule.thumbnailWidth);
             expect(thumbnailMeta.height).to.equal(thumbnailsModule.thumbnailHeight);
+        });
+    });
+
+    // FIXME:
+    describe('writeFromPdfPath()', function () {
+        it('should write thumbnail successfully', function () {
+            this.timeout(1500);
+            const docName = 'doc.pdf';
+            const thumbnailName = `doc.1.png`;
+            const docFullPath = join(mediaPath, docName);
+            const expectedThumbnailFullPath = join(thumbnailsPath, thumbnailName);
+            const pdfStream = createWriteStream(docFullPath);
+            return new Promise<void>((resolve, reject) => {
+                pdfStream.on('finish', () => {
+                    thumbnailsModule
+                        .writeFromPdfPath(docFullPath)
+                        .then(() => fixture.readdir(basename(thumbnailsPath)))
+                        .then((contents) => console.log(contents))
+                        .then(() => sharp(expectedThumbnailFullPath).metadata())
+                        .then((thumbnailMeta) => {
+                            expect(thumbnailMeta.width).to.equal(thumbnailsModule.thumbnailWidth);
+                            expect(thumbnailMeta.height).to.equal(thumbnailsModule.thumbnailHeight);
+                            resolve();
+                        })
+                        .catch(reject);
+                });
+                const doc = new PDFDocument();
+                doc.pipe(pdfStream);
+                doc.fontSize(25).text('Foobar foobar foobar', 100, 80);
+                doc.save();
+                doc.end();
+            });
         });
     });
 });

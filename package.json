@@ -23,6 +23,7 @@
     "@types/chai": "^5.2.3",
     "@types/mocha": "^8.2.3",
     "@types/node": "^22.10.6",
+    "@types/pdfkit": "^0.17.3",
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.4",
     "@types/sinon": "^17.0.4",
@@ -30,6 +31,7 @@
     "fs-fixture": "^2.10.1",
     "js-image-generator": "^1.0.4",
     "mock-fs": "^5.5.0",
+    "pdfkit": "^0.17.2",
     "sinon": "^21.0.0",
     "typescript": "^5.4.5"
   },

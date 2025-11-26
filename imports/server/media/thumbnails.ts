@@ -20,12 +20,17 @@ export const writeFromImagePath = (filePath: string) =>
         })
         .toFile(join(thumbnailsPath, basename(filePath)));
 
-export const writeFromPdfPath = (filePath: string) => 
-    pdf2picFromPath(filePath, {
+export const writeFromPdfPath = (filePath: string) => {
+    const saveFilename = basename(filePath).replace(/.pdf$/ig, '');
+
+    console.log(saveFilename);
+
+    return pdf2picFromPath(filePath, {
         density: 100,
-        saveFilename: basename(filePath),
+        saveFilename,
         savePath: thumbnailsPath,
-        format: "png",
+        format: 'png',
         width: thumbnailWidth,
         height: thumbnailHeight,
     })(1);
+}
